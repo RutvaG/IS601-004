@@ -8,6 +8,7 @@ on:
     branches:
       - dev
       - DeploymentSetup-video
+      - Flask-Sample_Pytest-video
 
 # Your workflows jobs.
 jobs:
