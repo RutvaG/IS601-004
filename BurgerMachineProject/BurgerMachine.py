@@ -175,7 +175,7 @@ class BurgerMachine:
                 self.handle_toppings(toppings)
                 self.print_current_burger()
             elif self.currently_selecting == STAGE.Pay:
-                expected = self.calculate_cost()
+                expected = self.calculate_cost()#RG695 Date: 03/27/2023
                 locale.setlocale(locale.LC_ALL, '')  # set the locale to the user's default
                 expected_str = locale.currency(expected, grouping=True)
                 total = input(f"Your total is {expected_str}, please enter the exact value.\n")
