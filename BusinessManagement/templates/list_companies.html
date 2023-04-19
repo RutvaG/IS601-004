@@ -15,8 +15,8 @@
     #}
     <form method="GET">
         <div class="row">
-            {{country_state_selector(layout="horizontal")}}
-            {{sort_filter(cols=[...])}}
+            {{country_state_selector(layout="horizontal", country=request.args.get('country'), state=request.args.get('state'))}}
+            {{sort_filter(cols=[('name', 'Company Name')] + allowed_columns, order=request.args.get('order'), sort=request.args.get('sort'), limit=request.args.get('limit', 10)))}}
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
             </div>
@@ -32,7 +32,9 @@
                 <tr class="text-capitalize">
                     {# generate th tags for each column to display #}
                     {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
-
+                    {% for col in cols %}
+                    <th>{{ col[1]|replace("_", " ") }}</th>
+                    {% endfor %}
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -46,7 +48,22 @@
                 an edit button that passes the company id to company edit
                 a delete button that passes the company id and the request args to the company delete route
                 #}
-
+                {% for row in rows %}
+                <tr>
+                    {% for col in cols %}
+                    {% if col[0] == 'website' %}
+                    <td><a href="{{ row[col[0]] }}">{{ row[col[0]] }}</a></td>
+                    {% else %}
+                    <td>{{ row[col[0]] }}</td>
+                    {% endif %}
+                    {% endfor %}
+                    <td>
+                        <a href="{{ url_for('employee.search', company_id=row['id'], company_name=row['name']) }}" class="btn btn-primary">View</a>
+                        <a href="{{ url_for('company.edit', id=row['id']) }}" class="btn btn-secondary">Edit</a>
+                        <form method="POST" action="{{ url_for('company.delete', id=row['id']) }}">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <input type="hidden" name="_args" value="{{ request.args.to_dict(flat=false)|tojson }}" />
+                            <input type="submit" class="btn btn-danger" value="Delete" />
             </tbody>
             {% else %}
             <tbody>

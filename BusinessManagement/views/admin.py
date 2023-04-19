@@ -34,27 +34,29 @@ def importCSV():
             """
             # DON'T EDIT
             employee_query = """
-             INSERT INTO IS601_MP3_Employees (first_name, last_name, email, company_id)
+            INSERT INTO IS601_MP3_Employees (first_name, last_name, email, company_id)
                         VALUES (%(first_name)s, %(last_name)s, %(email)s, (SELECT id FROM IS601_MP3_Companies WHERE name = %(company_name)s LIMIT 1))
                         ON DUPLICATE KEY UPDATE first_name=%(first_name)s, 
                         last_name = %(last_name)s, email = %(email)s, 
-                        company_id = (SELECT id FROM IS601_MP3_Companies WHERE name=%(company_name)s LIMIT 1)
+                        company_id = (SELECT id FROM companies WHERE name=%(company_name)s LIMIT 1)
             """
             # Note: this reads the file as a stream instead of requiring us to save it
             stream = io.TextIOWrapper(file.stream._file, "UTF8", newline=None)
             # TODO importcsv-2 read the csv file stream as a dict
-            
-            for row in ...:
-                pass # todo remove
+            import csv
+            reader = csv.DictReader(stream)
+            for row in reader:
                 # print(row) #example
                 # TODO importcsv-3 extract company data and append to company list 
                 # as a dict only with company data if all is present
-                
+                company_data = {'name': row.get('company_name'), 'address': row.get('address'), 'city': row.get('city'), 'country': row.get('country'), 'state': row.get('state'), 'zip': row.get('zip'), 'website': row.get('website')}
+                if all(company_data.values()):
+                    companies.append(company_data)
                 # TODO importcsv-4 extract employee data and append to employee list 
                 # as a dict only with employee data if all is present
-                
-               
-               
+                employee_data = {'first_name': row.get('first_name'), 'last_name': row.get('last_name'), 'email': row.get('email'), 'company_name': row.get('company_name')}
+                if all(employee_data.values()):
+                    employees.append(employee_data)    
             if len(companies) > 0:
                 print(f"Inserting or updating {len(companies)} companies")
                 try:
@@ -75,7 +77,7 @@ def importCSV():
                     traceback.print_exc()
                     flash("There was an error loading in the csv data", "danger")
             else:
-                 # TODO importcsv-8 display flash message (info) that no employees were loaded
+                # TODO importcsv-8 display flash message (info) that no employees were loaded
                 pass
             try:
                 result = DB.selectOne("SHOW SESSION STATUS LIKE 'questions'")

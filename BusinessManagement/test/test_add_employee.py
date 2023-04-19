@@ -23,7 +23,7 @@ def app():
         # kill #;
         # the # will be the process id of the sleeping query
         result = DB.query(""" set session wait_timeout = 1;
-        ALTER TABLE IS601_MP3_Employees AUTO_INCREMENT = 1;
+            ALTER TABLE IS601_MP3_Employees AUTO_INCREMENT = 1;
         """)
         print("result", result.status)
     except Exception as e:
