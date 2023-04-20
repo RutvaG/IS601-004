@@ -17,31 +17,36 @@
             website (not required)
             and prefill the fields with loaded company data
             #}
-            <div class="mb-3">
-                <label for="name" class="form-label">Company Name<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="name" name="name" required value="{{company.name}}">
+            <div class="form-group mb-3">
+                <label for="name" class="form-label">name</label>
+                <input id="name" class="form-control" name="name" type="text" value="{{ company.name }}">
             </div>
-    
-            <div class="mb-3">
-                <label for="address" class="form-label">Address<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="address" name="address" required value="{{company.address}}">
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="form-group mb-3">
+                <label for="address" class="form-label">address</label>
+                <input id="address" class="form-control" name="address" type="text" value="{{ company.address }}">
             </div>
-    
-            <div class="mb-3">
-                <label for="city" class="form-label">City<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="city" name="city" required value="{{company.city}}">
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="form-group mb-3">
+                <label for="website" class="form-label">website</label>
+                <input id="website" class="form-control" name="website" type="text" value="{{ company.website }}">
             </div>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="form-group mb-3">
+                <label for="city" class="form-label">city</label>
+                <input id="city" class="form-control" name="city" type="text" value="{{ company.city }}">
+            </div>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+
             {# use this for country/state selection #}
             {{country_state_selector(country=company.country, state=company.state)}}
-            <div class="mb-3">
-                <label for="zip" class="form-label">ZIP<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="zip" name="zip" required value="{{company.zip}}">
+
+            <div class="form-group mb-3">
+                <label for="zip" class="form-label">zip</label>
+                <input id="zip" class="form-control" name="zip" type="number" value="{{ company.zip }}">
             </div>
-    
-            <div class="mb-3">
-                <label for="website" class="form-label">Website</label>
-                <input type="text" class="form-control" id="website" name="website" value="{{company.website}}">
-            </div>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+
             <input type="submit" class="btn btn-primary" value="Save Company" />
         </form>
     </div>

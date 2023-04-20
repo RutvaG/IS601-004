@@ -14,21 +14,27 @@
             email (required)
             and prefill the fields with loaded employee data
             #}
-            <div class="mb-3">
-                <label for="first_name" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" value="{{employee.first_name}}" required>
+            <div class="form-group mb-3">
+                <label for="first_name" class="form-label">first_name</label>
+                <input id="first_name" class="form-control" name="first_name" type="text" value="{{employee.first_name}}">
             </div>
-            <div class="mb-3">
-                <label for="last_name" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" value="{{employee.last_name}}" required>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="form-group mb-3">
+                <label for="last_name" class="form-label">last_name</label>
+                <input id="last_name" class="form-control" name="last_name" type="text" value="{{employee.last_name}}">
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{employee.email}}" required>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">email</label>
+                <input id="email" class="form-control" name="email" type="text" value="{{employee.email}}">
             </div>
-            {# use the below for company selection #}
-            {{ company_dropdown(employee.company) }}
+            <!-- UCID: rg695; Date: 04/18/23 -->
             
+            {# use the below for company selection #}
+            {{ company_dropdown(employee.company_id) }}
+            
+
+
             <input type="submit" class="btn btn-primary" value="Save Employee" />
         </form>
     </div>
