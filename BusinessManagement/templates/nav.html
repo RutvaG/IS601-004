@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
         {# TODO replace my ucid mt85 with your ucid in the below a tag #}
-        <a class="navbar-brand" href="{{url_for('home.index')}}">DIAR-rg695</a>
+        <a class="navbar-brand" href="{{url_for('home.index')}}">DIAR-vg473</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -16,10 +16,10 @@
                         Company
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Search</a></li>
-                        <li><a class="dropdown-item" href="#">Add</a></li>
-
+                        <li><a class="dropdown-item" href="{{url_for('company.search')}}">Search</a></li>
+                        <li><a class="dropdown-item" href="{{url_for('company.add')}}">Add</a></li>
                     </ul>
+                    <!-- UCID: rg695; Date: 04/18/23 -->
                 </li>
                 <!-- employee dropdown nav -->
                 <li class="nav-item dropdown">
@@ -28,9 +28,10 @@
                         Employee
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Search</a></li>
-                        <li><a class="dropdown-item" href="#">Add</a></li>
+                        <li><a class="dropdown-item" href="{{url_for('employee.search')}}">Search</a></li>
+                        <li><a class="dropdown-item" href="{{url_for('employee.add')}}">Add</a></li>
                     </ul>
+                    <!-- UCID: rg695; Date: 04/18/23 -->
                 </li>
                 <!-- admin dropdown nav -->
                 <li class="nav-item dropdown">
@@ -39,7 +40,8 @@
                         Admin
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Import</a></li>
+                        <li><a class="dropdown-item" href="{{url_for('admin.importCSV')}}">Import</a></li>
+                        <!-- UCID: rg695; Date: 04/18/23 -->
                     </ul>
                 </li>
             </ul>
