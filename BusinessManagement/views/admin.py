@@ -38,7 +38,7 @@ def importCSV():
                         VALUES (%(first_name)s, %(last_name)s, %(email)s, (SELECT id FROM IS601_MP3_Companies WHERE name = %(company_name)s LIMIT 1))
                         ON DUPLICATE KEY UPDATE first_name=%(first_name)s, 
                         last_name = %(last_name)s, email = %(email)s, 
-                        company_id = (SELECT id FROM companies WHERE name=%(company_name)s LIMIT 1)
+                        company_id = (SELECT id FROM IS601_MP3_Companies WHERE name=%(company_name)s LIMIT 1)
             """
             # Note: this reads the file as a stream instead of requiring us to save it
             stream = io.TextIOWrapper(file.stream._file, "UTF8", newline=None)
@@ -49,18 +49,19 @@ def importCSV():
                 # print(row) #example
                 # TODO importcsv-3 extract company data and append to company list 
                 # as a dict only with company data if all is present
-                company_data = {'name': row.get('company_name'), 'address': row.get('address'), 'city': row.get('city'), 'country': row.get('country'), 'state': row.get('state'), 'zip': row.get('zip'), 'website': row.get('website')}
+                company_data = {'name': row['company_name'], 'address': row['address'], 'city': row['city'], 'country': row['country'], 'state': row['state'], 'zip': row['zip'], 'website': row['web']}
                 if all(company_data.values()):
                     companies.append(company_data)
                 # TODO importcsv-4 extract employee data and append to employee list 
                 # as a dict only with employee data if all is present
-                employee_data = {'first_name': row.get('first_name'), 'last_name': row.get('last_name'), 'email': row.get('email'), 'company_name': row.get('company_name')}
+                employee_data = {'first_name': row['first_name'], 'last_name': row['last_name'], 'email': row['email'], 'company_name': row['company_name']}
                 if all(employee_data.values()):
                     employees.append(employee_data)    
             if len(companies) > 0:
                 print(f"Inserting or updating {len(companies)} companies")
                 try:
                     result = DB.insertMany(company_query, companies)
+                    flash(f"Inserting or updating {len(companies)} companies","Message")
                     # TODO importcsv-5 display flash message about number of companies inserted
                 except Exception as e:
                     traceback.print_exc()
@@ -72,6 +73,7 @@ def importCSV():
                 print(f"Inserting or updating {len(employees)} employees")
                 try:
                     result = DB.insertMany(employee_query, employees)
+                    flash(f"Inserting or updating {len(employees)} employees","Message")
                     # TODO importcsv-7 display flash message about number of employees loaded
                 except Exception as e:
                     traceback.print_exc()

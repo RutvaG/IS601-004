@@ -12,11 +12,9 @@ def search():
     
     #UCID: rg695 04/18/23
     query = """
-        SELECT 
-            c.id, c.name, c.address, c.city, c.country, c.state, c.zip, c.website, 
-            COUNT(e.id) 
-        AS employees FROM IS601_MP3_Companies c 
-        LEFT JOIN IS601_MP3_Employees e ON e.company_id = c.id WHERE 1=1 """
+            SELECT c.id, c.name, c.address, c.city, c.country, c.state, c.zip, c.website,COUNT(e.id) 
+            AS employees FROM IS601_MP3_Companies c 
+            LEFT JOIN IS601_MP3_Employees e ON e.company_id = c.id WHERE 1=1 """
     
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
@@ -33,26 +31,26 @@ def search():
     #UCID: rg695 04/18/23
     # TODO search-3 append a LIKE filter for name if provided
     if name:
-        query += " AND c.name LIKE %s"
-        args.append(f"%{name}%")
+        query += " AND name LIKE %(name)s"
+        args['name']="%"+name+"%"
     # TODO search-4 append an equality filter for country if provided
     if country:
-        query += " AND country LIKE %s"
-        args.append(f"%{country}%")
+        query += " AND country = %(country)s"
+        args['country']="%"+country+"%"
     # TODO search-5 append an equality filter for state if provided
     if state:
-        query += " AND state LIKE %s"
-        args.append(f"%{state}%")
+        query += " AND state = %(state)s"
+        args['state']="%"+state+"%"
 
-        query += "GROUP BY c.id"
+    query += "GROUP BY c.id"
     # TODO search-6 append sorting if column and order are provided and within the allows columsn and allowed order asc,desc
     if column and order:
         if column in allowed_columns and order in ['asc', 'desc']:
             query += f" ORDER BY {column} {order}"
     # TODO search-7 append limit (default 10) or limit greater than 1 and less than or equal to 100
     if limit and int(limit) > 0 and int(limit) <= 100:
-        query += "LIMIT %s"
-        args.append(int(limit))
+        query += "LIMIT %(limit)s"
+        args['limit']=limit
     # TODO search-8 provide a proper error message if limit isn't a number or if it's out of bounds
     elif limit and (int(limit) <= 0 or int(limit) > 100):
         flash("Limit must be between 1 and 100", "warning")
@@ -74,7 +72,7 @@ def search():
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
     # do this prior to passing to render_template, but not before otherwise it can break validation
     
-    return render_template("list_companies.html", rows=rows, allowed_columns=allowed_columns)
+    return render_template("list_companies.html", rows=rows, allowed_columns=allowed_list)
 
 @company.route("/add", methods=["GET","POST"])
 def add():
@@ -104,17 +102,18 @@ def add():
             flash("State is required.", "danger")
             has_error = True
         # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
-        import pycountry
-        try:
-            country_obj = pycountry.countries.get(name=country)
-            state_obj = pycountry.subdivisions.get(name=state, country_code=country_obj.alpha_2)
-        except (KeyError, AttributeError):
-            flash("Invalid state for the selected country.", "danger")
-            has_error = True
+        #import pycountry
+        #try:
+
+            #country_obj = pycountry.countries.get(alpha_2=country)
+            #state_obj = pycountry.subdivisions.get(name=state, country_code=country_obj.alpha_2)
+        #except (KeyError, AttributeError):
+            #flash("Invalid state for the selected country.", "danger")
+            #has_error = True
         # hint see geography.py and pycountry documentation
         
         # TODO add-6 country is required (flash proper error message)
-        if not country:
+        if not country or pycountry.countries.get(alpha_2=country)==None:
             flash("Country is required.", "danger")
             has_error = True
         # TODO add-6a country should be a valid country mentioned in pycountry
@@ -134,18 +133,18 @@ def add():
         # note: call zip variable zipcode as zip is a built in function it could lead to issues
 
         has_error = False # use this to control whether or not an insert occurs
-    if not has_error:
-        try:
+        if not has_error:
+            try:
         # TODO add-9 insert the company into the database (use the sql/db.py file)
-            result = DB.insertOne("""
+                result = DB.insertOne("""
         INSERT INTO IS601_MP3_Companies
         (name, address, city, country, state, zip, website) VALUES(%s, %s, %s, %s, %s, %s, %s)
         """, name, address, city, country, state, zip, website)
-            if result.status:
-                flash("Company Added Successfully", "success")
-        except Exception as e:
-            print(e)
-            flash("An error occurred while adding the company. Please try again.", "danger")
+                if result.status:
+                    flash("Company Added Successfully", "success")
+            except Exception as e:
+                print(e)
+                flash("An error occurred while adding the company. Please try again.", "danger")
         
     return render_template("add_company.html")
         

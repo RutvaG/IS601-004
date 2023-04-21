@@ -5,11 +5,12 @@
 {% from "sort_filter.html" import sort_filter %}
 <div class="container-fluid">
     <div class="h1 text-center">{{request.args.get("company_name","")}} Employee Directory</div>
+
     <form method="GET">
         {# TODO
         build a horizontal filter/sort form with
-        first_name (show as first name, but name should be fn)
-        last_name (show as last name, but name should be ln)
+        fn (show as first name, but name should be fn)
+        ln (show as last name, but name should be ln)
         email (validate as text, not email, so partial match works)
         company (provided) (name is company value is the id)
         sort/order (using allowed_columns and provided partial template)
@@ -19,17 +20,27 @@
 
         <div class="row">
             <div class="col">
+                <input id="fn" class="form-control" placeholder="First Name" name="fn" type="text"
+                    value="{{request.args.get('fn') or ''}}">
+            </div>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="col">
+                <input id="ln" class="form-control" placeholder="Last Name" name="ln" type="text"
+                    value="{{request.args.get('ln') or ''}}">
+            </div>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="col">
+                <input id="email" class="form-control" placeholder="email" name="email" type="text"
+                    value="{{request.args.get('email') or ''}}">
+            </div>
+            <!-- UCID: rg695; Date: 04/18/23 -->
+            <div class="col">
                 <label class="visually-hidden" for="company">Company</label>
                 {{company_dropdown(request.args.get("company"))}}
             </div>
-            {{sort_filter(cols=[
-                {'name': 'First Name', 'fn': 'first_name'},
-                {'name': 'Last Name', 'fn': 'last_name'},
-                {'name': 'Email', 'fn': 'email'}
-            ])}}
+            {{sort_filter(cols=allowed_columns)}}
             <div class="col">
-                <label class="visually-hidden" for="limit">Limit</label>
-                <input type="number" id="limit" name="limit" class="form-control" min="1" max="100" value="{{ request.args.get('limit', 10) }}">
+                <input id="limit" class="form-control" placeholder="limit" name="limit" type="int" value="{{request.args.get('limit') or 10}}">
             </div>
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
@@ -45,10 +56,14 @@
             <tr class="text-capitalize">
                 {# generate th tags for each column to display #}
                 {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
-                {% for col in allowed_columns %}
-                    <th>{{ col|replace("_", " ") }}</th>
-                {% endfor %}
+                <th>id</th>
+                <th>first name</th>
+                <th>last name</th>
+                <th>email</th>
+                <th>company id</th>
+                <th>company name</th>
                 <th>Actions</th>
+                <!-- UCID: rg695; Date: 04/18/23 -->
             </tr>
         </thead>
         <tbody>
@@ -58,18 +73,21 @@
             a delete button that passes the employee id and the request args to the employee delete route
             #}
             {% for row in rows %}
-                <tr>
-                    {% for col in allowed_columns %}
-                        <td>{{ row[col] }}</td>
-                    {% endfor %}
-                    <td>
-                        <a href="{{ url_for('employee_edit', employee_id=row['id']) }}" class="btn btn-primary">Edit</a>
-                        <form method="POST" action="{{ url_for('employee_delete', employee_id=row['id'], **request.args.to_dict()) }}" style="display: inline">
-                            <input type="submit" class="btn btn-danger" value="Delete">
-                        </form>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.first_name }}</td>
+                <td>{{ row.last_name }}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row.company_id }}</td>
+                <td>{{ row.company_name }}</td>
+                <td>
+                    <a href="{{url_for('employee.edit', id=row.id)}}">Edit</a>
+                    <a href="{{url_for('employee.delete', id=row.id)}}">Delete</a>
+                </td>
+                <!-- UCID: rg695; Date: 04/18/23 -->
+            </tr>
             {% endfor %}
+
         </tbody>
         {% else %}
         <tbody>

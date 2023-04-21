@@ -10,10 +10,11 @@ def search():
     # DO NOT DELETE PROVIDED COMMENTS
     #UCID: rg695 04/18/23
     # TODO search-1 retrieve employee id as id, first_name, last_name, email, company_id, company_name using a LEFT JOIN
-    query = """SELECT e.id as id, e.first_name, e.last_name, e.email, e.company_id, IF(c.name is not null c.name,'N/A') as company_name
-    FROM IS601_MP3_Employees AS e LEFT JOIN IS601_MP3_Companies c ON e.company_id=c.id WHERE 1=1"""
+    query = """SELECT e.id , e.first_name, e.last_name, e.email, e.company_id, IF(name is not null, name,'N/A') as company_name
+            FROM IS601_MP3_Employees AS e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id WHERE 1=1"""
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["first_name", "last_name", "email", "company_name"]
+    allowed_list = [(v, v) for v in allowed_columns]
     #UCID: rg695 04/18/23
     # TODO search-2 get fn, ln, email, company, column, order, limit from request args
     first_name = request.args.get('fn')
@@ -26,19 +27,19 @@ def search():
     limit = request.args.get('limit')
     # TODO search-3 append like filter for first_name if provided
     if first_name:
-        query += " AND e.first_name LIKE %s"
-        args.append(f"%{first_name}%")
+        query += " AND first_name LIKE %(first_name)s"
+        args['first_name']="%"+first_name+"%"
     # TODO search-4 append like filter for last_name if provided
     if last_name:
-        query += " AND e.last_name LIKE %s"
-        args.append(f"%{last_name}%")
+        query += " AND last_name LIKE %(last_name)s"
+        args['last_name']="%"+last_name+"%"
     # TODO search-5 append like filter for email if provided
     if email:
-        query += " AND e.email LIKE %s"
-        args.append(f"%{email}%")
+        query += " AND email LIKE %(email)s"
+        args['email']="%"+email+"%"
     # TODO search-6 append equality filter for company_id if provided
     if company:
-        query += "AND e.company_id = {company}"
+        query += " AND company_id = %(company)s"
     # TODO search-7 append sorting if column and order are provided and within the allowed columns and order options (asc, desc)
     if column and order:
         print(column, order)
@@ -63,7 +64,7 @@ def search():
     # hint: use allowed_columns in template to generate sort dropdown
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
     # do this prior to passing to render_template, but not before otherwise it can break validation
-    return render_template("list_employees.html", rows=rows, allowed_columns=allowed_columns)
+    return render_template("list_employees.html", rows=rows, allowed_columns=allowed_list)
 
 @employee.route("/add", methods=["GET","POST"])
 def add():
@@ -105,7 +106,7 @@ def add():
                 result = DB.insertOne("""
                 INSERT INTO IS601_MP3_Employees (first_name, last_name, company_id, email) 
                 VALUES (%s, %s, %s, %s)
-                """, (first_name, last_name, company, email))
+                """, first_name, last_name, company, email)
                 if result.status:
                     flash("Created Employee Record", "success")
             except Exception as e:
