@@ -12,9 +12,14 @@ def search():
     
     #UCID: rg695 04/18/23
     query = """
-            SELECT c.id, c.name, c.address, c.city, c.country, c.state, c.zip, c.website,COUNT(e.id) 
-            AS employees FROM IS601_MP3_Companies c 
-            LEFT JOIN IS601_MP3_Employees e ON e.company_id = c.id WHERE 1=1 """
+            SELECT c.id, c.name, c.address, c.city, c.country, c.state, c.zip, c.website, e.employee_count
+            FROM IS601_MP3_Companies c 
+            LEFT JOIN (
+            SELECT company_id, COUNT(id) AS employee_count
+            FROM IS601_MP3_Employees 
+            GROUP BY company_id
+            ) e ON e.company_id = c.id 
+            WHERE 1=1"""
     
     args = [] # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
@@ -42,7 +47,7 @@ def search():
         query += " AND c.state like %s"
         args.append(f"%{state}%")
 
-    query += "GROUP BY c.id"
+    #query += "GROUP BY c.id"
     #UCID: rg695 04/18/23
     # TODO search-6 append sorting if column and order are provided and within the allows columsn and allowed order asc,desc
     if column and order:
@@ -68,7 +73,7 @@ def search():
     except Exception as e:
 
     # TODO search-9 make message user friendly
-        print(e)
+        print(f"{e}")
         flash("Error while searching for company", "danger")
     # hint: use allowed_columns in template to generate sort dropdown
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
@@ -80,13 +85,13 @@ def search():
 def add():
     if request.method == "POST":
         # TODO add-1 retrieve form data for name, address, city, state, country, zip, website
-        name = request.form('name')
-        address = request.form('address')
-        city = request.form('city')
-        state = request.form('state')
-        country = request.form('country')
-        zip = request.form('zip')
-        website = request.form('website')or ''
+        name = str(request.form['name'])
+        address = str(request.form['address'])
+        city = str(request.form['city'])
+        state = str(request.form['state'])
+        country = str(request.form['country'])
+        zip = str(request.form['zip'])
+        website = str(request.form['website'])or ''
         # TODO add-2 name is required (flash proper error message)
         if not name:
             flash("Company name is required.", "danger")
