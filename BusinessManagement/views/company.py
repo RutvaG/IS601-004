@@ -179,20 +179,22 @@ def edit():
             # TODO edit-2 name is required (flash proper error message)
             has_error= False
             if not name:
-                flash("Name is required", "danger")
                 has_error = True
+                flash("Name is required", "danger")
             # TODO edit-3 address is required (flash proper error message)
             if not address:
-                flash("Address is required", "danger")
                 has_error = True
+                flash("Address is required", "danger")
             # TODO edit-4 city is required (flash proper error message)
             if not city:
-                flash("City is required", "danger")
                 has_error = True
+                flash("City is required", "danger")
+                
             # TODO edit-5 state is required (flash proper error message)
             if not state:
-                flash("State is required", "danger")
                 has_error = True
+                flash("State is required", "danger")
+                
             # TODO edit-5a state should be a valid state mentioned in pycountry for the selected state
             #else:
                 #valid_states = [state_.name for state_ in pycountry.subdivisions.get(country_code=country)]
@@ -202,8 +204,9 @@ def edit():
             #UCID: rg695 04/18/23
             # TODO edit-6 country is required (flash proper error message)
             if not country:
-                flash("Country is required", "danger")
                 has_error = True
+                flash("Country is required", "danger")
+                
             # TODO edit-6a country should be a valid country mentioned in pycountry
             #else:
                 #valid_countries = [country.name for country in pycountry.countries]
@@ -215,8 +218,9 @@ def edit():
             website = request.form.get('website') or ''
             # TODO edit-8 zipcode is required (flash proper error message)
             if not zip:
-                flash("Zipcode is required", "danger")
                 has_error = True
+                flash("Zipcode is required", "danger")
+                
                 
             # note: call zip variable zipcode as zip is a built in function it could lead to issues
             # populate data dict with mappings

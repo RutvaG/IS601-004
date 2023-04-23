@@ -83,24 +83,28 @@ def add():
         # TODO add-2 first_name is required (flash proper error message)
         has_error = False # use this to control whether or not an insert occurs
         if not first_name:
-            flash("First Name is required", "danger")
             has_error = True
+            flash("First Name is required", "danger")
+            
         
         # TODO add-3 last_name is required (flash proper error message)
         if not last_name:
-            flash("Last Name is required", "danger")
             has_error = True
+            flash("Last Name is required", "danger")
+            #has_error = True
         
         # TODO add-4 company (may be None)
         company = request.form.get('company') or None
         
         # TODO add-5 email is required (flash proper error message)
         if not email:
-            flash("Email is required", "danger")
             has_error = True
+            flash("Email is required", "danger")
+            #has_error = True
         
         # TODO add-5a verify email is in the correct format
         else:
+            
             email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b')
             if not email_regex.match(email):
                 has_error = True
@@ -139,21 +143,24 @@ def edit():
             
             # TODO edit-2 first_name is required (flash proper error message)
             if not first_name:
-                flash("First Name is required", "danger")
                 has_error = True
+                flash("First Name is required", "danger")
+                #has_error = True
 
             # TODO edit-3 last_name is required (flash proper error message)
             if not last_name:
-                flash("Last Name is required", "danger")
                 has_error = True
+                flash("Last Name is required", "danger")
+                #has_error = True
 
             # TODO edit-4 company (may be None)
             company = request.form.get('company') or None
 
             # TODO edit-5 email is required (flash proper error message)
             if not email:
-                flash("Email is required", "danger")
                 has_error = True
+                flash("Email is required", "danger")
+                #has_error = True
 
             # TODO edit-5a verify email is in the correct format
             else:
