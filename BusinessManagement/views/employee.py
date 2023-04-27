@@ -140,25 +140,29 @@ def edit():
             last_name = request.form.get("last_name")
             company = request.form.get("company")
             email = request.form.get("email")
-            
+            has_error = False
             # TODO edit-2 first_name is required (flash proper error message)
             if not first_name:
                 has_error = True
+                print("Firstname missing ")
                 flash("First Name is required", "danger")
                 #has_error = True
 
             # TODO edit-3 last_name is required (flash proper error message)
             if not last_name:
                 has_error = True
+                print("Lastname missing ")
                 flash("Last Name is required", "danger")
                 #has_error = True
 
             # TODO edit-4 company (may be None)
             company = request.form.get('company') or None
+            print(f"company {company}")
 
             # TODO edit-5 email is required (flash proper error message)
             if not email:
                 has_error = True
+                print("Email missing ")
                 flash("Email is required", "danger")
                 #has_error = True
 
@@ -167,28 +171,31 @@ def edit():
                 email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b')
                 if not email_regex.match(email):
                     has_error = True
+                    print("Invalid Email")
                     flash("Invalid Email Format", "danger")
                 
             if not has_error:
                 try:
                     #UCID: rg695 04/18/23 
                     # TODO edit-6 fill in proper update query
-                    query= DB.update("""
+                    result= DB.update("""
                     UPDATE IS601_MP3_Employees
-                    SET first_name = %s, last_name = %s, email = %s, company = %s
-                    WHERE id = %s""",first_name,last_name,company, email, id)
+                    SET first_name = %s, last_name = %s, email = %s, company_id = %s
+                    WHERE id = %s""",first_name,last_name, email, company, id)
                     
                     if result.status:
+                        print("Update employee")
                         flash("Updated Employee Record", "success")
                 except Exception as e:
                     # TODO edit-7 make this user-friendly
+                    print(f"{e}")
                     flash("Error occurred while updating employee", "danger")
         row = {}
         try:
             #UCID: rg695 04/18/23
             # TODO edit-8 fetch the updated data 
             result = DB.selectOne("""SELECT e.first_name, e.last_name, e.email, e.company_id, 
-                IF(c.name is not null, c.name, N/A') AS company_name
+                IF(c.name is not null, c.name, 'N/A') AS company_name
                 FROM IS601_MP3_Employees AS e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id
                 WHERE e.id = %s""", id)
             if result.status:

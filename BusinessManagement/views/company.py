@@ -12,10 +12,10 @@ def search():
     
     #UCID: rg695 04/18/23
     query = """
-            SELECT c.id, c.name, c.address, c.city, c.country, c.state, c.zip, c.website, e.employee_count
+            SELECT c.id, c.name, c.address, c.city, c.country, c.state, c.zip, c.website, e.employees
             FROM IS601_MP3_Companies c 
             LEFT JOIN (
-            SELECT company_id, COUNT(id) AS employee_count
+            SELECT company_id, COUNT(id) AS employees
             FROM IS601_MP3_Employees 
             GROUP BY company_id
             ) e ON e.company_id = c.id 
