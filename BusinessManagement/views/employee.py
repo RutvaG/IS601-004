@@ -15,6 +15,7 @@ def search():
     args = [] # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["first_name", "last_name", "email", "company_name"]
     allowed_list = [(v, v) for v in allowed_columns]
+
     #UCID: rg695 04/18/23
     # TODO search-2 get fn, ln, email, company, column, order, limit from request args
     first_name = request.args.get('fn')
@@ -25,32 +26,45 @@ def search():
     order = request.args.get('order')
     limit = 10
     limit = request.args.get('limit')
+
     # TODO search-3 append like filter for first_name if provided
+    #UCID: rg695 04/18/23
     if first_name:
         query += " AND e.first_name like %s"
         args.append(f"%{first_name}%")
+
     # TODO search-4 append like filter for last_name if provided
+    #UCID: rg695 04/18/23
     if last_name:
         query += " AND e.last_name like %s"
         args.append(f"%{last_name}%")
+
     # TODO search-5 append like filter for email if provided
+    #UCID: rg695 04/18/23
     if email:
         query += " AND email like %s"
         args.append(f"%{email}%")
+
     # TODO search-6 append equality filter for company_id if provided
+    #UCID: rg695 04/18/23
     if company:
         query += f" AND company_id = {company}"
+
     #UCID: rg695 04/18/23
     # TODO search-7 append sorting if column and order are provided and within the allowed columns and order options (asc, desc)
     if column and order:
         #print(column, order)
         if column in allowed_columns and order in ['asc', 'desc']:
             query += f" ORDER BY {column} {order}"
+
     # TODO search-8 append limit (default 10) or limit greater than 1 and less than or equal to 100
+    #UCID: rg695 04/18/23
     if limit and int(limit) > 0 and int(limit) <= 100:
         query += " LIMIT %s"
         args.append(int(limit))
+
     # TODO search-9 provide a proper error message if limit isn't a number or if it's out of bounds
+    #UCID: rg695 04/18/23
     elif limit and (int(limit) <= 0 or int(limit) > 100):
         flash("Limit must be between 1 and 100", "warning")
     
@@ -81,6 +95,7 @@ def add():
         email = request.form.get("email")
         
         # TODO add-2 first_name is required (flash proper error message)
+        #UCID : rg695 04/18/23
         has_error = False # use this to control whether or not an insert occurs
         if not first_name:
             has_error = True
@@ -88,21 +103,25 @@ def add():
             
         
         # TODO add-3 last_name is required (flash proper error message)
+        #UCID : rg695 04/18/23
         if not last_name:
             has_error = True
             flash("Last Name is required", "danger")
             #has_error = True
         
         # TODO add-4 company (may be None)
+        #UCID : rg695 04/18/23
         company = request.form.get('company') or None
         
         # TODO add-5 email is required (flash proper error message)
+        #UCID : rg695 04/18/23
         if not email:
             has_error = True
             flash("Email is required", "danger")
-            #has_error = True
+            
         
         # TODO add-5a verify email is in the correct format
+        #UCID : rg695 04/18/23
         else:
             
             email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b')
@@ -113,6 +132,7 @@ def add():
         if not has_error:
             try:
                 #TODO add-6 add query and add arguments
+                #UCID : rg695 04/18/23
                 result = DB.insertOne("""
                 INSERT INTO IS601_MP3_Employees (first_name, last_name, company_id, email) 
                 VALUES (%s, %s, %s, %s)
@@ -120,6 +140,7 @@ def add():
                 if result.status:
                     flash("Created Employee Record", "success")
             except Exception as e:
+                #UCID : rg695 04/18/23
                 # TODO add-7 make message user friendly
                 print(e)
                 flash("An error occurred while adding employee", "danger")

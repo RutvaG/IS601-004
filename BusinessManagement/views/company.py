@@ -39,10 +39,12 @@ def search():
         query += " AND c.name like %s"
         args.append(f"%{name}%")
     # TODO search-4 append an equality filter for country if provided
+    #UCID: rg695 04/18/23
     if country:
         query += " AND c.country like %s"
         args.append(f"%{country}%")
     # TODO search-5 append an equality filter for state if provided
+    #UCID: rg695 04/18/23
     if state:
         query += " AND c.state like %s"
         args.append(f"%{state}%")
@@ -54,10 +56,12 @@ def search():
         if column in allowed_columns and order in ['asc', 'desc']:
             query += f" ORDER BY {column} {order}"
     # TODO search-7 append limit (default 10) or limit greater than 1 and less than or equal to 100
+    #UCID: rg695 04/18/23
     if limit and int(limit) > 0 and int(limit) <= 100:
         query += "LIMIT %s"
         args.append(int(limit))
     # TODO search-8 provide a proper error message if limit isn't a number or if it's out of bounds
+    #UCID: rg695 04/18/23
     elif limit and (int(limit) <= 0 or int(limit) > 100):
         flash("Limit must be between 1 and 100", "warning")
     
@@ -84,6 +88,7 @@ def search():
 @company.route("/add", methods=["GET","POST"])
 def add():
     if request.method == "POST":
+        #UCID: rg695 04/18/23
         # TODO add-1 retrieve form data for name, address, city, state, country, zip, website
         name = str(request.form['name'])
         address = str(request.form['address'])
@@ -92,23 +97,28 @@ def add():
         country = str(request.form['country'])
         zip = str(request.form['zip'])
         website = str(request.form['website'])or ''
+        #UCID: rg695 04/18/23
         # TODO add-2 name is required (flash proper error message)
         if not name:
             flash("Company name is required.", "danger")
             has_error = True
+        #UCID: rg695 04/18/23
         # TODO add-3 address is required (flash proper error message)
         if not address:
             flash("Address is required.", "danger")
             has_error = True   
+        #UCID: rg695 04/18/23
         # TODO add-4 city is required (flash proper error message)
         if not city:
             flash("City is required.", "danger")
             has_error = True
         # TODO add-5 state is required (flash proper error message)
+        #UCID: rg695 04/18/23
         if not state:
             flash("State is required.", "danger")
             has_error = True
         # TODO add-5a state should be a valid state mentioned in pycountry for the selected state
+        #UCID: rg695 04/18/23
         #import pycountry
         #try:
 
@@ -120,10 +130,12 @@ def add():
         # hint see geography.py and pycountry documentation
         
         # TODO add-6 country is required (flash proper error message)
+        #UCID: rg695 04/18/23
         if not country or pycountry.countries.get(alpha_2=country)==None:
             flash("Country is required.", "danger")
             has_error = True
         # TODO add-6a country should be a valid country mentioned in pycountry
+        #UCID: rg695 04/18/23
         try:
             country_obj = pycountry.countries.get(name=country)
         except KeyError:
@@ -131,8 +143,10 @@ def add():
             has_error = True
         # hint see geography.py and pycountry documentation
         # TODO add-7 website is not required
+        #UCID: rg695 04/18/23
         website = request.form.get('website') or ''
         # TODO add-8 zipcode is required (flash proper error message)
+        #UCID: rg695 04/18/23
         if not zip:
             flash("Zipcode is required.", "danger")
             has_error = True
@@ -150,7 +164,7 @@ def add():
         """, name, address, city, country, state, zip, website)
                 if result.status:
                     flash("Company Added Successfully", "success")
-            except Exception as e:
+            except Exception as e:#UCID: rg695 04/18/23
                 print(e)
                 flash("An error occurred while adding the company. Please try again.", "danger")
         
@@ -168,6 +182,7 @@ def edit():
     else:
         if request.method == "POST":
             #data = {"id": id}
+            #UCID: rg695 04/18/23 
             # TODO edit-1 retrieve form data for name, address, city, state, country, zip, website
             name = request.form.get("name")
             address = request.form.get("address")
@@ -177,25 +192,30 @@ def edit():
             zip = request.form.get("zip")
             website = request.form.get("website") or ''
             # TODO edit-2 name is required (flash proper error message)
+            #UCID: rg695 04/18/23 
             has_error= False
             if not name:
                 has_error = True
                 flash("Name is required", "danger")
             # TODO edit-3 address is required (flash proper error message)
+            #UCID: rg695 04/18/23 
             if not address:
                 has_error = True
                 flash("Address is required", "danger")
             # TODO edit-4 city is required (flash proper error message)
+            #UCID: rg695 04/18/23 
             if not city:
                 has_error = True
                 flash("City is required", "danger")
                 
             # TODO edit-5 state is required (flash proper error message)
+            #UCID: rg695 04/18/23 
             if not state:
                 has_error = True
                 flash("State is required", "danger")
                 
             # TODO edit-5a state should be a valid state mentioned in pycountry for the selected state
+            #UCID: rg695 04/18/23
             #else:
                 #valid_states = [state_.name for state_ in pycountry.subdivisions.get(country_code=country)]
                 #if state not in valid_states:
