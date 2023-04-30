@@ -157,42 +157,48 @@ def edit():
         if request.method == "POST":
             
             # TODO edit-1 retrieve form data for first_name, last_name, company, email
+            #UCID: rg695 04/18/23
             first_name = request.form.get("first_name")
             last_name = request.form.get("last_name")
             company = request.form.get("company")
             email = request.form.get("email")
             has_error = False
             # TODO edit-2 first_name is required (flash proper error message)
+            #UCID: rg695 04/18/23
             if not first_name:
                 has_error = True
-                print("Firstname missing ")
+                #print("Firstname missing ")
                 flash("First Name is required", "danger")
                 #has_error = True
 
             # TODO edit-3 last_name is required (flash proper error message)
+            #UCID: rg695 04/18/23
             if not last_name:
                 has_error = True
-                print("Lastname missing ")
+                #print("Lastname missing ")
                 flash("Last Name is required", "danger")
                 #has_error = True
 
             # TODO edit-4 company (may be None)
+            #UCID: rg695 04/18/23
             company = request.form.get('company') or None
             print(f"company {company}")
 
             # TODO edit-5 email is required (flash proper error message)
+            #UCID: rg695 04/18/23
             if not email:
                 has_error = True
-                print("Email missing ")
+                #print("Email missing ")
                 flash("Email is required", "danger")
                 #has_error = True
 
             # TODO edit-5a verify email is in the correct format
+            #UCID: rg695 04/18/23
             else:
                 email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b')
                 if not email_regex.match(email):
                     has_error = True
-                    print("Invalid Email")
+                    #print("Invalid Email")
                     flash("Invalid Email Format", "danger")
                 
             if not has_error:
@@ -205,10 +211,11 @@ def edit():
                     WHERE id = %s""",first_name,last_name, email, company, id)
                     
                     if result.status:
-                        print("Update employee")
+                        #print("Update employee")
                         flash("Updated Employee Record", "success")
                 except Exception as e:
                     # TODO edit-7 make this user-friendly
+                    #UCID: rg695 04/18/23
                     print(f"{e}")
                     flash("Error occurred while updating employee", "danger")
         row = {}
@@ -223,6 +230,7 @@ def edit():
                 row = result.row
         except Exception as e:
             # TODO edit-9 make this user-friendly
+            #UCID: rg695 04/18/23
             flash("An error occured while trying to edit employee info", "danger")
     # TODO edit-10 pass the employee data to the render template
     return render_template("edit_employee.html", employee=row)
