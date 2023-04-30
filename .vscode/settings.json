@@ -12,6 +12,7 @@
         "M4"
     ],
     "python.analysis.extraPaths": [
-        "./flask_sample"
+        "./flask_sample",
+        "./Flask-Flash"
     ]
 }
