@@ -13,6 +13,7 @@ def importCSV():
         file = request.files['file']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
+        #UCID: rg695 04/18/23
         if file.filename == '':
             flash('No selected file', "warning")
             return redirect(request.url)

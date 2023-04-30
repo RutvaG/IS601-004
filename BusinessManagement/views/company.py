@@ -258,12 +258,14 @@ def edit():
                         flash("Updated Record", "success")
                 except Exception as e:
                     # TODO edit-10 make this user-friendly
+                    #UCID: rg695 04/18/23
                     print(e)
                     #print("An error occurred while updating your company. Please try again.")
                     flash("An error occurred while updating your company. Please try again.", "danger")
         row = {}
         try:
             # TODO edit-11 fetch the updated data
+            #UCID: rg695 04/18/23
             result = DB.selectOne("SELECT name, address, city, country, state, zip, website FROM IS601_MP3_Companies WHERE id= %s", id)
             if result.status:
                 row = result.row
