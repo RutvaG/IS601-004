@@ -79,8 +79,6 @@ def delete():
             flash(e, "danger")
         # TODO pass along feedback
 
-        # remove the id args since we don't need it in the list route
-        # but we want to persist the other query args
         del args["id"]
     else:
         flash("No id present", "warning")
